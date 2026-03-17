@@ -1,5 +1,5 @@
 # REACTOR
-This is an R package for statistical analysis of regulons. This package expects the outputs of the SCENIC framework and clustering information as its inputs. The package uses ROTS R package for conducting the statistical testing and this in turn makes it possible to conduct the analysis on data of various experimental conditions, including case-control- and multigroup analysis. REACTOR outputs the resulting ROTS object as well as a dataframe of the results for users with no experience using ROTS.
+This is an R package for statistical analysis of regulons. This package expects the outputs of the SCENIC framework and clustering information as its inputs. The package uses ROTS R package for conducting the statistical testing and this in turn makes it possible to conduct the analysis on data of various experimental conditions, including case-control- and multigroup analysis. REACTOR outputs the resulting ROTS object as well as a table of the results for users with no experience using ROTS.
 
 <div align="center">
 
@@ -76,11 +76,11 @@ Now that we have some data to work with we can start running the REACTOR analysi
 |:-------- |:-------- |
 |minCells |Parameter for filtering the data based on the minimum number of cells present in a regulon-cluster combination within a donor |
 |RBM |Regulon Binary Matrix. This is produced by SCENIC's binarize-function (1st column should represent the single cell sample IDs) |
-|Study Design |Study design dataframe. Should contain information (as columns) from which donor and which condition the single cell sample came and the 1st column should represent the single cell sample IDs  |
-|Clustering |Clustering dataframe (1st column should represent the single cell sample IDs) |
-|cluster_cName |Column name of the clustering to use from the Clustering dataframe |
-|condition_cName |Name of the column of conditions to be contrasted from the StudyDesign dataframe (i.e COVID or Healthy) |
-|donor_cName |Name of the column that specifies the donor from the StudyDesign dataframe |
+|Study Design |Study design table. Should contain information (as columns) from which donor and which condition the single cell sample came and the 1st column should represent the single cell sample IDs  |
+|Clustering |Clustering table (1st column should represent the single cell sample IDs) |
+|cluster_cName |Column name of the clustering to use from the Clustering table |
+|condition_cName |Name of the column of conditions to be contrasted from the StudyDesign table (i.e COVID or Healthy) |
+|donor_cName |Name of the column that specifies the donor from the StudyDesign table |
 
 ``` R 
 donor_cname      = "donor"
@@ -90,7 +90,7 @@ condition_cname   = "status"
 minCells = 0
 
 # processData returns a list that contains the processed data at index 1 and
-# RegulonActivity dataframe at index 2. The regulonActivity dataframe can be
+# RegulonActivity table at index 2. The regulonActivity table can be
 # viewed to fine tune the minCells parameter for future runs.
 data_out <- REACTOR::processData(minCells = minCells, RBM = rbm,
 StudyDesign = studyDesign, Clustering = clustering,
@@ -103,7 +103,7 @@ Again lets look at the parameters of the function first:
 
 |Parameter |Explanation |
 |:-------- |:-------- |
-|data |Dataframe containing the proportional counts of binary regulon activity. This is the first output produced by the REACTOR::processData-function. |
+|data |Table containing the proportional counts of binary regulon activity. This is the first output produced by the REACTOR::processData-function. |
 |groups |Vector specifying the experimental groups (i.e. COVID, Healthy) as integers |
 |maxZeros |Maximum number of zero values present in a row of the input data frame. Rows that contain more zero values than this parameter will be filtered before the ROTS analysis. |
 |... |Parameters passed onto ROTS. See  [ROTS](https://www.bioconductor.org/packages/release/bioc/html/ROTS.html) |

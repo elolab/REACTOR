@@ -1,6 +1,6 @@
 processData <-
-function(minCells = 0, RBM, StudyDesign, Clustering, cluster_cName, condition_cName,
-                     sample_cName = NULL) {
+function(minCells = 10, RBM, StudyDesign, Clustering, cluster_cName, condition_cName,
+                     donor_cName = NULL) {
   
 
   #Rename data columns for readability
@@ -9,7 +9,7 @@ function(minCells = 0, RBM, StudyDesign, Clustering, cluster_cName, condition_cN
   StudyDesign <- rename(StudyDesign, CellID = 1)
   Clustering <- rename(Clustering, Cluster = cluster_cName)
   StudyDesign <- rename(StudyDesign, Condition = condition_cName)
-  StudyDesign <- rename(StudyDesign, Group = sample_cName)
+  StudyDesign <- rename(StudyDesign, Group = donor_cName)
   
   
   #Join the data tables
@@ -29,7 +29,7 @@ function(minCells = 0, RBM, StudyDesign, Clustering, cluster_cName, condition_cN
   all_clusters  <- unique(RegulonActivity$Cluster)
   
   # Initialize the output DF
-  long_data <- data.frame()
+  data_out <- data.frame()
   
   
   #Loop through all the clusters and regulons and bind the results to the output DF
@@ -51,14 +51,14 @@ function(minCells = 0, RBM, StudyDesign, Clustering, cluster_cName, condition_cN
       rowData[1, colnames(temp_row)] <- temp_row
       rownames(rowData) <- rowName
       
-      long_data <- rbind(long_data, rowData)
+      data_out <- rbind(data_out, rowData)
       
       
       
     }
   }
   
-  return(list(long_data, RegulonActivity))
+  return(data_out)
   
   
 }

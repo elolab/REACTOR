@@ -36,13 +36,13 @@ library(REACTOR)
 
 ```
 ##### Data import
-REACTOR requires the user to provide binarized activity matrix produced by SCENICs binarize()-function [1], clinical information (a table that matches the single cell samples to patients and conditions) and a clustering table.
+REACTOR requires the user to provide binarized activity matrix produced by SCENICs binarize()-function [1], donor information (a table that matches the single cell samples to donors and conditions) and a clustering table.
 ``` R 
 rbm <- read_csv(rbm_fname) # Reading in the binarized activtiy matrix
-studyDesign <- read_csv(study_fname) # Reading in the clinical information
+studyDesign <- read_csv(study_fname) # Reading in the donor information
 clustering <- read_csv(cluster_fname) # Reading in the clustering table
 ```
-Below are examples of the input dataframe structures.
+Below are examples of the input table structures.
 
 Clustering table:
 |cellID |cellTypeCluster |
@@ -52,7 +52,7 @@ Clustering table:
 |Cell3 |Cluster1 |
 |Cell4 |Cluster2 |
 
-Binarized activity matrix:
+Binarized activity table:
 |cellID |Regulon1 |Regulon2 |Regulon3 |
 |:-------- |:-------- |:-------- |:-------- |
 |Cell1 |1 |0 |1 |
@@ -60,7 +60,7 @@ Binarized activity matrix:
 |Cell3 |1 |0 |1 |
 |Cell4 |0 |1 |0 |
 
-Study design dataframe:
+Study design table:
 |cellID |donor |status |
 |:-------- |:-------- |:-------- |
 |Cell1 |1 |Case |1 |
@@ -74,16 +74,16 @@ Now that we have some data to work with we can start running the REACTOR analysi
 
 |Parameter |Explanation |
 |:-------- |:-------- |
-|minCells |minimum number of cells present in a cell-type cluster within a donor |
+|minCells |Parameter for filtering the data based on the minimum number of cells present in a regulon-cluster combination within a donor |
 |RBM |Regulon Binary Matrix. This is produced by SCENIC's binarize-function (1st column should represent the single cell sample IDs) |
-|Study Design |Study design dataframe. Should contain information (as columns) from which sample and which condition the single cell sample came and the 1st column should represent the single cell sample IDs  |
+|Study Design |Study design dataframe. Should contain information (as columns) from which donor and which condition the single cell sample came and the 1st column should represent the single cell sample IDs  |
 |Clustering |Clustering dataframe (1st column should represent the single cell sample IDs) |
 |cluster_cName |Column name of the clustering to use from the Clustering dataframe |
 |condition_cName |Name of the column of conditions to be contrasted from the StudyDesign dataframe (i.e COVID or Healthy) |
-|sample_cName |Name of the sample column from the StudyDesign dataframe |
+|donor_cName |Name of the column that specifies the donor from the StudyDesign dataframe |
 
 ``` R 
-sample_cname      = "donor"
+donor_cname      = "donor"
 cluster_cname     = "cellTypeClusters"
 condition_cname   = "status"
 
@@ -116,7 +116,7 @@ groups <- c(1,1,1,2,2,2)
 DAA_out <- REACTOR::differentialActivityAnalysis(data_out[[1]], groups)
 ```
 ## :bookmark_tabs: Vignette
-[Example analysis with simulated data](https://github.com/elolab/reactoR/blob/main/Vignette/reactor_vignette_simdata.html)
+[Example analysis with simulated data](https://github.com/elolab/reactoR/blob/main/Vignette/reactor_vignette_simdata.Rmd)
 
 ## :books: References
 [1] B. Van de Sande et al., “A scalable SCENIC workflow for single-cell gene regulatory network analysis,” Nat. Protoc., vol. 15, no. 7, Art. no. 7, Jul. 2020, doi: 10.1038/s41596-020-0336-2.<br>

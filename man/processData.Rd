@@ -20,19 +20,19 @@ processData(minCells = 10,
   Regulon Binary Matrix. The output produced by the SCENICs binarize-function works here. Please also make sure that the first column represents the single cell sample IDs!
   }
   \item{StudyDesign}{
-  Study design dataframe. Should contain information (as columns) from which donor and which condition the single cell sample came from. Please also make sure that the first column represents the single cell sample IDs!
+  Study design dataframe. Should contain information (as columns) from which donor (and replicate) and which condition the single cell sample came from. Please also make sure that the first column represents the single cell sample IDs!
   }
   \item{Clustering}{
   scRNA clustering results as a dataframe. Please also make sure that the first column represents the single cell sample IDs!
   }
   \item{cluster_cName}{
-  Name of the column you wish to use as your clusters from the Clustering dataframe.
+  Name of the column you wish to use as your clusters of the Clustering dataframe.
   }
   \item{condition_cName}{
   Name of the column of conditions to be contrasted from the StudyDesign dataframe (i.e COVID or Healthy).
   }
   \item{donor_cName}{
-  Name of the donor column from the StudyDesign dataframe.
+  Name of the donor (and replicate) column of the StudyDesign dataframe.
   }
 }
 \value{

@@ -36,7 +36,7 @@ library(REACTOR)
 
 ```
 ##### Data import
-REACTOR requires the user to provide binarized activity matrix produced by SCENICs binarize()-function [1], donor information (a table that matches the single cell samples to donors and conditions) and a clustering table.
+REACTOR requires the user to provide binarized activity matrix produced by SCENICs binarize()-function [1], donor (and replicate) information (a table that matches the single cell samples to donors and conditions) and a clustering table.
 ``` R 
 rbm <- read_csv(rbm_fname) # Reading in the binarized activtiy matrix
 studyDesign <- read_csv(study_fname) # Reading in the donor information
@@ -50,23 +50,35 @@ Clustering table:
 |Cell1 |Cluster1 |
 |Cell2 |Cluster2 |
 |Cell3 |Cluster1 |
-|Cell4 |Cluster2 |
+|Cell4 |Cluster3 |
+|Cell5 |Cluster2 |
+|Cell6 |Cluster4 |
+|Cell7 |Cluster5 |
+|Cell8 |Cluster3 |
 
-Binarized activity table:
+Binarized activity matrix (SCENICs output):
 |cellID |Regulon1 |Regulon2 |Regulon3 |
 |:-------- |:-------- |:-------- |:-------- |
 |Cell1 |1 |0 |1 |
 |Cell2 |0 |1 |0 |
 |Cell3 |1 |0 |1 |
 |Cell4 |0 |1 |0 |
+|Cell5 |1 |0 |1 |
+|Cell6 |0 |1 |0 |
+|Cell7 |1 |0 |1 |
+|Cell8 |0 |1 |0 |
 
 Study design table:
 |cellID |donor |status |
 |:-------- |:-------- |:-------- |
-|Cell1 |1 |Case |1 |
-|Cell2 |1 |Case |0 |
-|Cell3 |2 |Control |
-|Cell4 |2 |Control |
+|Cell1 |1 |Case |
+|Cell2 |1 |Case |
+|Cell3 |2 |Case |
+|Cell4 |2 |Case |
+|Cell5 |3 |Control |
+|Cell6 |3 |Control |
+|Cell7 |4 |Control |
+|Cell8 |4 |Control |
 
 ##### Processing the data into a format that can be analyzed
 
@@ -80,7 +92,7 @@ Now that we have some data to work with we can start running the REACTOR analysi
 |Clustering |Clustering table (1st column should represent the single cell sample IDs) |
 |cluster_cName |Column name of the clustering to use from the Clustering table |
 |condition_cName |Name of the column of conditions to be contrasted from the StudyDesign table (i.e COVID or Healthy) |
-|donor_cName |Name of the column that specifies the donor from the StudyDesign table |
+|donor_cName |Name of the column that specifies the donor (and replicate) from the StudyDesign table |
 
 ``` R 
 donor_cname      = "donor"
@@ -94,7 +106,7 @@ minCells = 0
 # viewed to fine tune the minCells parameter for future runs.
 data_out <- REACTOR::processData(minCells = minCells, RBM = rbm,
 StudyDesign = studyDesign, Clustering = clustering,
-condition_cName = condition_cname, sample_cName = sample_cname,
+condition_cName = condition_cname, donor_cName = donor_cname,
 cluster_cName = cluster_cname)
 ```
 ##### Conducting the differential expression analysis

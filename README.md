@@ -28,7 +28,7 @@ R -e 'install.packages("devtools"); devtools::install("REACTOR")'
 
 ## :hammer_and_wrench: Usage
 
-Please see the [vignette](https://github.com/elolab/reactoR/blob/main/Vignette/reactor_vignette_simdata.html) for a more detailed example analysis and explanation of the parameters used!
+Please see the [vignette](https://elolab.github.io/REACTOR/Vignette/reactor_vignette_simdata.html) for a more detailed example analysis and explanation of the parameters used!
 
 Load the library
 ``` R 
@@ -128,7 +128,7 @@ groups <- c(1,1,1,2,2,2)
 DAA_out <- REACTOR::differentialActivityAnalysis(data = data_out[[1]], groups = groups)
 ```
 ## :bookmark_tabs: Vignette
-[Example analysis with simulated data](https://github.com/elolab/reactoR/blob/main/Vignette/reactor_vignette_simdata.html)
+[Example analysis with simulated data](https://elolab.github.io/REACTOR/Vignette/reactor_vignette_simdata.html)
 
 ## :books: References
 [1] S. Aibar et al., "SCENIC: single-cell regulatory network inference and clustering", Nat Methods 14, 1083–1086, Oct. 2017. https://doi.org/10.1038/nmeth.4463.<br>

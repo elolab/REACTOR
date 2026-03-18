@@ -1,5 +1,5 @@
 # REACTOR
-This is an R package for statistical analysis of regulons. This package expects the outputs of the SCENIC framework and clustering information as its inputs. The package uses ROTS R package for conducting the statistical testing and this in turn makes it possible to conduct the analysis on data of various experimental conditions, including case-control- and multigroup analysis. REACTOR outputs the resulting ROTS object as well as a table of the results for users with no experience using ROTS.
+This is an R package for statistical analysis of regulons (transcription factor with its predicted targets). This package expects the outputs of the SCENIC framework and clustering information as its inputs. The package uses ROTS R package for conducting the statistical testing and this in turn makes it possible to conduct the analysis on data of various experimental conditions, including case-control- and multigroup analysis. REACTOR outputs the resulting ROTS object as well as a table of the results for users with no experience using ROTS.
 
 <div align="center">
 
@@ -28,7 +28,7 @@ R -e 'install.packages("devtools"); devtools::install("REACTOR")'
 
 ## :hammer_and_wrench: Usage
 
-Please see the vignette for a more detailed example analysis and explanation of the parameters used!
+Please see the [vignette](https://github.com/elolab/reactoR/blob/main/Vignette/reactor_vignette_simdata.html) for a more detailed example analysis and explanation of the parameters used!
 
 Load the library
 ``` R 
@@ -36,10 +36,10 @@ library(REACTOR)
 
 ```
 ##### Data import
-REACTOR requires the user to provide binarized activity matrix produced by SCENICs binarize()-function [1], donor (and replicate) information (a table that matches the single cell samples to donors and conditions) and a clustering table.
+REACTOR requires the user to provide binarized activity matrix produced by SCENICs binarize()-function [1], study deisgn table (a table that matches the single cell samples to donors (and replicates) and conditions) and a clustering table.
 ``` R 
 rbm <- read_csv(rbm_fname) # Reading in the binarized activtiy matrix
-studyDesign <- read_csv(study_fname) # Reading in the donor information
+studyDesign <- read_csv(study_fname) # Reading in the study design
 clustering <- read_csv(cluster_fname) # Reading in the clustering table
 ```
 Below are examples of the input table structures.
@@ -82,7 +82,7 @@ Study design table:
 
 ##### Processing the data into a format that can be analyzed
 
-Now that we have some data to work with we can start running the REACTOR analysis. The first step in the REACTOR workflow is to create the activity matrix for the differential activity analysis. This can be done using the REACTOR processData-function. Lets look at the parameters:
+The first step in the REACTOR workflow is to create the activity matrix for the differential activity analysis. This can be done using the REACTOR processData-function. Lets look at the parameters:
 
 |Parameter |Explanation |
 |:-------- |:-------- |
@@ -110,8 +110,8 @@ condition_cName = condition_cname, donor_cName = donor_cname,
 cluster_cName = cluster_cname)
 ```
 ##### Conducting the differential expression analysis
-Now that we have done some data pre-processing we can run the differential activity analysis using the differentialActivityAnalysis-function. REACTOR uses ROTS [2] to conduct the analysis.
-Again lets look at the parameters of the function first:
+With the processed data the differential analysis can be performed using the differentialActivityAnalysis(). REACTOR uses ROTS [2] to conduct the analysis.
+Here, the parameters of the function:
 
 |Parameter |Explanation |
 |:-------- |:-------- |
@@ -125,11 +125,11 @@ groups <- c(1,1,1,2,2,2)
 
 # Differential activity analysis using REACTOR
 #The function returns a list whose outputs are as follows: at index 1 you have the ROTS object and at index 2 you have simplified results table 
-DAA_out <- REACTOR::differentialActivityAnalysis(data_out[[1]], groups)
+DAA_out <- REACTOR::differentialActivityAnalysis(data = data_out[[1]], groups = groups)
 ```
 ## :bookmark_tabs: Vignette
-[Example analysis with simulated data](https://github.com/elolab/reactoR/blob/main/Vignette/reactor_vignette_simdata.Rmd)
+[Example analysis with simulated data](https://github.com/elolab/reactoR/blob/main/Vignette/reactor_vignette_simdata.html)
 
 ## :books: References
-[1] B. Van de Sande et al., “A scalable SCENIC workflow for single-cell gene regulatory network analysis,” Nat. Protoc., vol. 15, no. 7, Art. no. 7, Jul. 2020, doi: 10.1038/s41596-020-0336-2.<br>
+[1] S. Aibar et al., "SCENIC: single-cell regulatory network inference and clustering", Nat Methods 14, 1083–1086, Oct. 2017. https://doi.org/10.1038/nmeth.4463.<br>
 [2] T. Suomi, F. Seyednasrollah, M. K. Jaakkola, T. Faux, and L. L. Elo, “ROTS: An R package for reproducibility-optimized statistical testing,” PLOS Comput. Biol., vol. 13, no. 5, p. e1005562, May 2017, doi: 10.1371/journal.pcbi.1005562.

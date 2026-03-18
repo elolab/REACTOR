@@ -1,7 +1,7 @@
 ---
-title: "REACTOR_vignette_simData"
-author: "Markus & Sini"
-date: "2025-06-12"
+title: "REACTOR vignette with simulated data"
+author: "Markus Lindén, Sebastián Zúñiga Norman & Sini Junttila"
+date: "2026-03-18"
 output: html_document
 ---
 
@@ -36,7 +36,7 @@ head(binary_matrix)
 
 ```
 
-Now let's simulate the clustering our e.g. Coralysis or SEURAT analysis might have made for us:
+Now let's simulate the clustering our e.g. Coralysis [1] or SEURAT [3] analysis might have made for us:
 
 ```{r simClustering}
 # Lets use the single cell sample identifiers we made earlier and assign them some cell-type clusters
@@ -61,7 +61,7 @@ head(studyDesign)
 
 ```
 
-## Running REACTOR analysis with our newly simulated data
+## Running REACTOR
 
 Now that we have some data to work with we can start running the REACTOR analysis. The first step in the REACTOR workflow is to create the activity matrix for the differential activity analysis. This can be done using the REACTOR processData-function.
 
@@ -102,16 +102,16 @@ head(regulonActivity)
 ```
 ### Running differential activity analysis
 
-Now that we have done some data pre-processing we can run the differential activity analysis using the differentialActivityAnalysis-function! REACTOR uses ROTS [2] to conduct the analysis.
+With the processed data the differential analysis can be performed using the differentialActivityAnalysis(). REACTOR uses ROTS [2] to conduct the analysis.
 
 The input parameters are as follows:
 
 |Parameter |Explanation |Value to be used in this vignette |
 |:-------- |:-------- |:-------- |
 |data |Dataframe containing the proportional counts of binary regulon activity. This is the output produced by the REACTOR::processData-function. |regulonActivity dataframe we created earlier using REACTOR |
-|groups |Vector specifying the experimental groups (i.e. COVID, Healthy) as integers |In this case it is c(1,1,2,2). You can check this by viewing the regulonActivity dataframe and checking the column names and comparing them to the metadata you have |
+|groups |Vector specifying the experimental groups (i.e. COVID, Healthy) as integers |In this case it is c(1,1,2,2)</font>. You can check this by viewing the regulonActivity dataframe and checking the column names and comparing them to the metadata you have |
 |Max Zeros |Maximum number of zero values present in a row of the input data frame. Rows that contain more zero values than this parameter will be filtered before the ROTS analysis. |We will use the default parameter (NA) in this case as our dataset is rather small |
-|... |Parameters passed onto ROTS. See  [ROTS](https://www.bioconductor.org/packages/release/bioc/html/ROTS.html) |We will be setting seed to 1234 |
+|... |Parameters passed onto ROTS. See  [ROTS](https://www.bioconductor.org/packages/release/bioc/html/ROTS.html) |We will be setting seed to 1234 and K (top list size) to 100|
 
 
 ```{r differentialactivity}
@@ -119,7 +119,7 @@ The input parameters are as follows:
 groups <- c(rep(1,2), rep(2,2)) 
 
 # Differential activity analysis using reactor
-DAA_out <- REACTOR::differentialActivityAnalysis(regulonActivity, groups, seed=1234, K=100)
+DAA_out <- REACTOR::differentialActivityAnalysis(data = regulonActivity, groups = groups, seed=1234, K=100)
 
 # The outputs from the analysis are as follows: at index 1 you have the ROTS object and at index 2 you have simplified results table 
 ROTS_obj <- DAA_out[[1]]
@@ -129,7 +129,7 @@ head(ROTS_results)
 
 ```
 
-Based on this analysis we have one significant regulon-celltype combination based on p-value 0.05 cutoff (CD16 Monocyte STAT2). The FDR values are not significant due to the nature in which we simulated the data and the dataset being rather small. With the ROTS object you can easily do some plotting. Let's explore a few options (more can be found in [ROTS](https://www.bioconductor.org/packages/release/bioc/html/ROTS.html) documentation)
+Based on this analysis we have one significant regulon-celltype combination based on p-value 0.05 cutoff (CD16 Monocyte | STAT2, where CD16 Monocyte is the celltype cluster and STAT2 the regulon). The FDR values are not significant due to the nature in which we simulated the data and the dataset being rather small. With the ROTS object you can easily do some plotting. Let's explore a few options (more can be found in [ROTS](https://www.bioconductor.org/packages/release/bioc/html/ROTS.html) documentation)
 ```{r ROTSVOLCANO}
 
 plot(ROTS_obj, type="pvalue")
@@ -140,6 +140,8 @@ plot(ROTS_obj, type="volcano", fdr=0.61, labels = T)
 
 ## References
 
-[1] B. Van de Sande et al., “A scalable SCENIC workflow for single-cell gene regulatory network analysis,” Nat. Protoc., vol. 15, no. 7, Art. no. 7, Jul. 2020, doi: 10.1038/s41596-020-0336-2.
+[1] S. Aibar et al., "SCENIC: single-cell regulatory network inference and clustering", Nat Methods 14, 1083–1086, Oct. 2017. https://doi.org/10.1038/nmeth.4463.
 
-[2] T. Suomi, F. Seyednasrollah, M. K. Jaakkola, T. Faux, and L. L. Elo, “ROTS: An R package for reproducibility-optimized statistical testing,” PLOS Comput. Biol., vol. 13, no. 5, p. e1005562, May 2017, doi: 10.1371/journal.pcbi.1005562.
+[2] T. Suomi et al., “ROTS: An R package for reproducibility-optimized statistical testing”, PLOS Comput. Biol., vol. 13, no. 5, p. e1005562, May 2017, doi: 10.1371/journal.pcbi.1005562.
+
+[3] Y. Hao et al., "Dictionary learning for integrative, multimodal and scalable single-cell analysis", Nat Biotechnol. Feb. 2024;42(2):293-304. doi: 10.1038/s41587-023-01767-y.

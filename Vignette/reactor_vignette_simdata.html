@@ -9,11 +9,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Markus &amp; Sini" />
+<meta name="author" content="Markus Lindén, Sebastián Zúñiga Norman &amp; Sini Junttila" />
 
-<meta name="date" content="2025-06-12" />
+<meta name="date" content="2026-03-18" />
 
-<title>REACTOR_vignette_simData</title>
+<title>REACTOR vignette with simulated data</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -350,9 +350,10 @@ display: none;
 
 
 
-<h1 class="title toc-ignore">REACTOR_vignette_simData</h1>
-<h4 class="author">Markus &amp; Sini</h4>
-<h4 class="date">2025-06-12</h4>
+<h1 class="title toc-ignore">REACTOR vignette with simulated data</h1>
+<h4 class="author">Markus Lindén, Sebastián Zúñiga Norman &amp; Sini
+Junttila</h4>
+<h4 class="date">2026-03-18</h4>
 
 </div>
 
@@ -391,8 +392,8 @@ head(binary_matrix)</code></pre>
 ## 4 Covid-1-4     1    1    1     0     1     0    0    0    1    0
 ## 5 Covid-1-5     0    1    0     1     1     0    1    0    1    1
 ## 6 Covid-1-6     1    0    1     0     1     0    0    0    1    0</code></pre>
-<p>Now let’s simulate the clustering our e.g. Coralysis or SEURAT
-analysis might have made for us:</p>
+<p>Now let’s simulate the clustering our e.g. Coralysis [1] or SEURAT
+[3] analysis might have made for us:</p>
 <pre class="r"><code># Lets use the single cell sample identifiers we made earlier and assign them some cell-type clusters
 cellTypeClusters &lt;- rep(c(&quot;CD 14 Monocyte&quot;, &quot;CD 16 Monocyte&quot;, &quot;CD8m T&quot;, &quot;NK&quot;), 10)
 clustering &lt;- cbind.data.frame(cellID, cellTypeClusters)
@@ -424,8 +425,8 @@ head(studyDesign)</code></pre>
 ## 5 Covid-1-5 Covid1  COVID
 ## 6 Covid-1-6 Covid1  COVID</code></pre>
 </div>
-<div id="running-reactor-analysis-with-our-newly-simulated-data" class="section level2">
-<h2>Running REACTOR analysis with our newly simulated data</h2>
+<div id="running-reactor" class="section level2">
+<h2>Running REACTOR</h2>
 <p>Now that we have some data to work with we can start running the
 REACTOR analysis. The first step in the REACTOR workflow is to create
 the activity matrix for the differential activity analysis. This can be
@@ -521,10 +522,9 @@ cluster_cName = cluster_cname)</code></pre>
 </div>
 <div id="running-differential-activity-analysis" class="section level3">
 <h3>Running differential activity analysis</h3>
-<p>Now that we have done some data pre-processing we can run the
-differential activity analysis using the
-differentialActivityAnalysis-function! REACTOR uses ROTS [2] to conduct
-the analysis.</p>
+<p>With the processed data the differential analysis can be performed
+using the differentialActivityAnalysis(). REACTOR uses ROTS [2] to
+conduct the analysis.</p>
 <p>The input parameters are as follows:</p>
 <table>
 <colgroup>
@@ -552,9 +552,9 @@ REACTOR</td>
 <td align="left">groups</td>
 <td align="left">Vector specifying the experimental groups (i.e. COVID,
 Healthy) as integers</td>
-<td align="left">In this case it is c(1,1,2,2). You can check this by
-viewing the regulonActivity dataframe and checking the column names and
-comparing them to the metadata you have</td>
+<td align="left">In this case it is c(1,1,2,2)</font>. You can check
+this by viewing the regulonActivity dataframe and checking the column
+names and comparing them to the metadata you have</td>
 </tr>
 <tr class="odd">
 <td align="left">Max Zeros</td>
@@ -567,14 +567,15 @@ our dataset is rather small</td>
 <tr class="even">
 <td align="left">…</td>
 <td align="left">Parameters passed onto ROTS. See <a href="https://www.bioconductor.org/packages/release/bioc/html/ROTS.html">ROTS</a></td>
-<td align="left">We will be setting seed to 1234</td>
+<td align="left">We will be setting seed to 1234 and K (top list size)
+to 100</td>
 </tr>
 </tbody>
 </table>
 <pre class="r"><code>groups &lt;- c(rep(1,2), rep(2,2)) 
 
 # Differential activity analysis using reactor
-DAA_out &lt;- REACTOR::differentialActivityAnalysis(regulonActivity, groups, seed=1234, K=100)</code></pre>
+DAA_out &lt;- REACTOR::differentialActivityAnalysis(data = regulonActivity, groups = groups, seed=1234, K=100)</code></pre>
 <pre><code>## Warning in ROTS(data = data_filtered, groups = groups, ...): Top list size K is
 ## more than 90% of the data. Be cautious with reproducibility estimates.</code></pre>
 <pre><code>## Bootstrapping samples</code></pre>
@@ -607,7 +608,8 @@ head(ROTS_results)</code></pre>
 ## NK | MYCN              0.1327375 0.6000000  41.66667
 ## CD 14 Monocyte | MAFB  0.2989125 0.8181818  16.66667</code></pre>
 <p>Based on this analysis we have one significant regulon-celltype
-combination based on p-value 0.05 cutoff (CD16 Monocyte STAT2). The FDR
+combination based on p-value 0.05 cutoff (CD16 Monocyte | STAT2, where
+CD16 Monocyte is the celltype cluster and STAT2 the regulon). The FDR
 values are not significant due to the nature in which we simulated the
 data and the dataset being rather small. With the ROTS object you can
 easily do some plotting. Let’s explore a few options (more can be found
@@ -623,13 +625,15 @@ documentation)</p>
 </div>
 <div id="references" class="section level2">
 <h2>References</h2>
-<p>[1] B. Van de Sande et al., “A scalable SCENIC workflow for
-single-cell gene regulatory network analysis,” Nat. Protoc., vol. 15,
-no. 7, Art. no. 7, Jul. 2020, doi: 10.1038/s41596-020-0336-2.</p>
-<p>[2] T. Suomi, F. Seyednasrollah, M. K. Jaakkola, T. Faux, and L. L.
-Elo, “ROTS: An R package for reproducibility-optimized statistical
-testing,” PLOS Comput. Biol., vol. 13, no. 5, p. e1005562, May 2017,
-doi: 10.1371/journal.pcbi.1005562.</p>
+<p>[1] S. Aibar et al., “SCENIC: single-cell regulatory network
+inference and clustering”, Nat Methods 14, 1083–1086, Oct. 2017. <a href="https://doi.org/10.1038/nmeth.4463" class="uri">https://doi.org/10.1038/nmeth.4463</a>.</p>
+<p>[2] T. Suomi et al., “ROTS: An R package for
+reproducibility-optimized statistical testing”, PLOS Comput. Biol.,
+vol. 13, no. 5, p. e1005562, May 2017, doi:
+10.1371/journal.pcbi.1005562.</p>
+<p>[3] Y. Hao et al., “Dictionary learning for integrative, multimodal
+and scalable single-cell analysis”, Nat Biotechnol.
+Feb. 2024;42(2):293-304. doi: 10.1038/s41587-023-01767-y.</p>
 </div>
 
 
